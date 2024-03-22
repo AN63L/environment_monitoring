@@ -20,6 +20,7 @@ Excluding time for build and development, the breakdown of the costs are as foll
 - EUR 7.66 for the ESP32
 - EUR 18.50 for the BME680 sensor
 - EUR 19.99 for the PMS7003 sensor
+- EUR 1.95 PMS7003 sensor adapter
 - EUR 0.67 for the 8 magnets
 - EUR 5 for the power supply (I used a micro-USB power supply I had already, I'm guessing you can get one for that price off Amazon)
 - EUR 20 for the soldering iron
@@ -33,7 +34,8 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 
 - [ESP32 board by diymore ](https://www.amazon.fr/dp/B0BS6R68H6?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 - [BME680 sensor](https://www.amazon.fr/dp/B07K1CGQTJ?psc=1&ref=ppx_yo2ov_dt_b_product_details)
-- [PM-G7 sensor](https://www.amazon.fr/dp/B0B1526JHQ?psc=1&ref=ppx_yo2ov_dt_b_product_details)
+- [PM-G7 / PMSA7003 sensor](https://www.amazon.fr/dp/B0B1526JHQ?psc=1&ref=ppx_yo2ov_dt_b_product_details)
+- [PMS7003 sensor adapter](https://soldered.com/product/pms7003-sensor-adapter/)
 - 8 Jumper cables (female to female)
 - PLA + (I have a personal preference for SUNLU PLA +, but you can use any kind of PLA)
 - [5x3mm magnets for the case](https://www.amazon.fr/dp/B0C9WQYZ27?ref=ppx_yo2ov_dt_b_product_details&th=1)
@@ -48,6 +50,8 @@ The parts were printed using a Creality CR-20 pro.
 The pieces are as follows: 
 - Lid
 - Case
+
+There are two versions of the lid. For some reason, I could not print the first version with the hex holes, so I created the second version which should provide a lot more air to the sensors but is less beautiful and is not suitable for exterior use. 
 
 The print times totals to 9h and 13 minutes. 
 
