@@ -1,17 +1,19 @@
-#include <SPI.h>
+// #include <SPI.h>
+#include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
 
 #define LED 2
 
-#define BME_SCK 18
-#define BME_MISO 19
-#define BME_MOSI 23
-#define BME_CS 5
+// #define BME_SCK 18
+// #define BME_MISO 19
+// #define BME_MOSI 23
+// #define BME_CS 5
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-Adafruit_BME680 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK);
+Adafruit_BME680 bme; // I2C
+// Adafruit_BME680 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK);
 
 #include <PMserial.h>
 SerialPM pms(PMSx003, Serial); // PMSx003, UART
