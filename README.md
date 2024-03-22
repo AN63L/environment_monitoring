@@ -23,8 +23,7 @@ Excluding time for build and development, the breakdown of the costs are as foll
 - EUR 0.67 for the 8 magnets
 - EUR 5 for the power supply (I used a micro-USB power supply I had already, I'm guessing you can get one for that price off Amazon)
 - EUR 20 for the soldering iron
-- EUR for the X grams of PLA
-- EUR for the X kilowatts of energy to print the piece (X hours)
+- EUR 0.89 for the 89 grams of PLA (approx)
 
 The total of this project comes down to round **EUR 80**
 
@@ -35,7 +34,7 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 - [ESP32 board by diymore ](https://www.amazon.fr/dp/B0BS6R68H6?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 - [BME680 sensor](https://www.amazon.fr/dp/B07K1CGQTJ?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 - [PM-G7 sensor](https://www.amazon.fr/dp/B0B1526JHQ?psc=1&ref=ppx_yo2ov_dt_b_product_details)
-- X Jumper cables (female to female)
+- 8 Jumper cables (female to female)
 - PLA + (I have a personal preference for SUNLU PLA +, but you can use any kind of PLA)
 - [5x3mm magnets for the case](https://www.amazon.fr/dp/B0C9WQYZ27?ref=ppx_yo2ov_dt_b_product_details&th=1)
 - Some strong glue to stick the magnets to the case
@@ -47,14 +46,20 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 The parts were printed using a Creality CR-20 pro. 
 
 The pieces are as follows: 
+- Lid
+- Case
 
-
-The print times are as follows: 
-
+The print times totals to 9h and 13 minutes. 
 
 My slicer settings were as follows: 
 
-
+- Infill: 20%
+- Infill pattern: Gyroid
+- Support: Touching build plate
+- Support pattern: lines
+- Nozzle size: 0.4mm
+- Nozzle temp: 210 degrees
+- Bed temp: 60 degrees
 
 ## Assembly and wiring
 
@@ -118,7 +123,7 @@ The official ESPHome page is available [here](https://esphome.io/guides/getting_
 I'm assuming you already have Home Assistant installed. 
 
 
-1. Make sure you are running the latest version of Home Assistant Core and Home Assistant OS, upgrade if necessary. I am running version XX of HA Core and version XXX of HA OS. 
+1. Make sure you are running the latest version of Home Assistant Core and Home Assistant OS, upgrade if necessary. I am running version 2024.3.1 of HA Core and version 12.1 of HA OS. 
 2. Install ESPHome add-on with all the toggles activated (hopefully you have Home Assistant OS and not a docker install, it's much easier - just click the "Show Add-on on My" to install the add-on)
 3. Install ESPHome on the ESP32, a useful guide can be found [here](https://www.youtube.com/watch?v=mCs0fa7Gr9U) or [this one](https://www.youtube.com/watch?v=7PoUWszwaFk). I used "OpenESPHomeWeb" to install ESPHome on the ESP32 board (this was the easiest method I found)
 4. Add this [BME680 add-on](https://esphome.io/components/sensor/bme680) to your ESP32 configuration:
