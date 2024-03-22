@@ -28,6 +28,8 @@ Excluding time for build and development, the breakdown of the costs are as foll
 
 The total of this project comes down to round **EUR 80**
 
+I used platformIO to manage the ESP32, the main folder with the content is available in the folder "ESP32 ENVIRONMENT MONITORING SYSTEM"
+
 ## Resources
 
 - [ESP32 board by diymore ](https://www.amazon.fr/dp/B0BS6R68H6?psc=1&ref=ppx_yo2ov_dt_b_product_details)
