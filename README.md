@@ -103,8 +103,6 @@ Optionally, you can use the SPI connection (however it won't work with home assi
 
 3. Next we will connect the PMS7003. If you are lucky, you go one with an adaptor board to make the assembly. I originally didn't and had to solder the pins myself (bad idea). After buying an adapter, I followed the connections below. 
 
-![PMS7003 Front](./images/pms7003_1.jpg)
-![PMS7003 Back](./images/pms7003_2.jpg)
 
 4. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
 
