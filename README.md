@@ -1,6 +1,11 @@
 # Environment monitoring system with notification system
 Budget friendly and lower-power consumption environment monitoring system with ESP32 board, BME680 sensor and PM-G7.
 
+![Case view](./images/case1.jpg)
+![Case view](./images/case2.jpg)
+![Case view](./images/case3.jpg)
+![Case view](./images/case4.jpg)
+
 ## Overview
 
 This guide is part of a project I built to monitor the air quality, temperature, humidity, pressure and gas in a closed room. 
@@ -40,6 +45,7 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 - PLA + (I have a personal preference for SUNLU PLA +, but you can use any kind of PLA)
 - [5x3mm magnets for the case](https://www.amazon.fr/dp/B0C9WQYZ27?ref=ppx_yo2ov_dt_b_product_details&th=1)
 - A soldering iron and relevant materials
+- Superglue to glue the BME680 sensor to the case
 
 
 ## 3D prints
@@ -106,7 +112,17 @@ Optionally, you can use the SPI connection (however it won't work with home assi
 
 4. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
 
-5. Place the components inside, close the lid and you're ready to go !
+![Magnets placed inside case](./images/magnets.jpg)
+
+5. Glue the BME680 sensor to the case (base of the component)
+
+![Without BME680 sensor](./images/case_before_bme680.jpg)
+![BME680 glued sensor](./images/bme680_glued.jpg)
+
+6. Place the components inside
+7. (optional) glue with hot glue the ESP32 in place (depending on the length of your jumper cables it might not be an issue but because there is no holder you'll have to open the lid every time you plug/unplug the ESP32)
+8. close the lid and you're ready to go !
+
 
 
 ## Software setup
@@ -254,6 +270,7 @@ I used different online guides to get to the final results. You'll find some ref
 
 ## Future improvements
 
+- Add a placeholder for the ESP32, for the moment it has no holder. It's not moving much because of the length of the cables but it is not ideal. 
 - Make it more portable by using a portable battery
 - I would have liked to add an OLED display but was limited by the number of power GPIOs (an extension board is needed)
 - A server can be added to display the results on a web page and additional notifications
