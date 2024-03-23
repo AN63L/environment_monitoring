@@ -24,7 +24,7 @@ Excluding time for build and development, the breakdown of the costs are as foll
 - EUR 0.67 for the 8 magnets
 - EUR 5 for the power supply (I used a micro-USB power supply I had already, I'm guessing you can get one for that price off Amazon)
 - EUR 20 for the soldering iron
-- EUR 0.89 for the 89 grams of PLA (approx)
+- EUR 0.69 for the 69 grams of PLA (approx)
 
 The total of this project comes down to round **EUR 80**
 
@@ -39,7 +39,6 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 - 8 Jumper cables (female to female)
 - PLA + (I have a personal preference for SUNLU PLA +, but you can use any kind of PLA)
 - [5x3mm magnets for the case](https://www.amazon.fr/dp/B0C9WQYZ27?ref=ppx_yo2ov_dt_b_product_details&th=1)
-- Some strong glue to stick the magnets to the case
 - A soldering iron and relevant materials
 
 
@@ -48,22 +47,42 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 The parts were printed using a Creality CR-20 pro. 
 
 The pieces are as follows: 
-- Lid
-- Case
+- Lid (v2)
+- Case (v3)
 
-There are two versions of the lid. For some reason, I could not print the first version with the hex holes, so I created the second version which should provide a lot more air to the sensors but is less beautiful and is not suitable for exterior use. 
+The original version of the case had some issues: 
+- there was not enough space to attach the jumper cables to the BME680 sensor
+- the stands for the ESP32 were way too far (the reference model I used was incorrect) and the stand weren't solid enough
+- the whole for the charging port of the ESP32 was a little too low
+- the depth of the magnets could be improved by 1mm to avoid any space between the lid and the case
 
-The print times totals to 9h and 13 minutes. 
+Overall it should work if you print it but you'll need to find a way to connect the BME680 sensor, remove the stands. You could glue everything together with hot glue to avoid any issues with the charging port of the ESP32. 
+
+I wanted to improve the design in general and fix the above issues, you'll find the second version of the case is much better overall. 
+
+There are three versions of the lid. For some reason, I could not print the first version with the hex holes, so I created the second version which should provide a lot more air to the sensors but is less beautiful and is not suitable for exterior use. 
+
+The third version is cleaned up to fit my needs with enough air, with a better design, rounded corners and a thinner format.
+
+The print times totals to 8h and 34 minutes. 
+
+You'll have to flip the lid 180 degrees, with the holes facing outward. This will make it easier to remove the supports for the BME680 sensor holder rather than the holes. 
 
 My slicer settings were as follows: 
 
-- Infill: 20%
+- Infill: 10%
 - Infill pattern: Gyroid
 - Support: Touching build plate
 - Support pattern: lines
 - Nozzle size: 0.4mm
 - Nozzle temp: 210 degrees
 - Bed temp: 60 degrees
+- Print speed: 80 mm/s
+- Infill speed" 40 mm/s
+- Travel speed 200 mm/s
+- Initial layer speed: 20 mm/s
+- Support: everywhere at 80 degrees angle
+- **Remove overlapping volumes in Mesh fixes settings in order to print honeycomb holes on lid**
 
 ## Assembly and wiring
 
@@ -82,13 +101,15 @@ Optionally, you can use the SPI connection (however it won't work with home assi
 
 ![BME TO ESP32 I2C](./images/ESP32_BME680_Wiring_Diagram_SPI.png)
 
-3. Next we will connect the PMS7003. If you are lucky, you go one with an adaptor board to make the assembly. I didn't and had to solder the pins myself. The connections are shown below.
+3. Next we will connect the PMS7003. If you are lucky, you go one with an adaptor board to make the assembly. I originally didn't and had to solder the pins myself (bad idea). After buying an adapter, I followed the connections below. 
 
 ![PMS7003 Front](./images/pms7003_1.jpg)
 ![PMS7003 Back](./images/pms7003_2.jpg)
 
+4. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
 
-Beware: the pins are very fragile and close together, I highly recommend you use an adapter board instead.
+5. Place the components inside, close the lid and you're ready to go !
+
 
 ## Software setup
 
@@ -235,7 +256,6 @@ I used different online guides to get to the final results. You'll find some ref
 
 ## Future improvements
 
-- Improve the connections with the PMS7003 sensor by using an adapter board, it would make the connections less fragile and easier to setup
 - Make it more portable by using a portable battery
-- I would have liked to add an OLED display but was limited by the number of power GPIOs
+- I would have liked to add an OLED display but was limited by the number of power GPIOs (an extension board is needed)
 - A server can be added to display the results on a web page and additional notifications
