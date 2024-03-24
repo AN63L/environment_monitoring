@@ -1,4 +1,4 @@
-# Environment monitoring system with notification system
+# Environment monitoring system with notification system and simple web server
 Budget friendly and lower-power consumption environment monitoring system with ESP32 board, BME680 sensor and PM-G7.
 
 ![Case view](./images/case1.jpg)
@@ -132,8 +132,6 @@ GND -> GND
 
 8. close the lid and you're ready to go !
 
-
-
 ## Software setup
 
 I'm assuming you are familiar with the ESP32 micro-controller and now how to access and run it. There are loads of guides to get started, you can use these for reference: 
@@ -148,15 +146,36 @@ I'm assuming you are familiar with the ESP32 micro-controller and now how to acc
 
 ## Software explanations
 
-I've included comments inside the code for additional explanations.
+I've included comments inside the code for additional explanations. You can un-comment certain lines to enable console logging.
 
 The code does the following on a loop: 
 
 1. Initialise the pins
-2. Turn on the LED
-3. Gather the data through the BME680 sensor
-4. Turn the LED off
-5. Sleep
+2. Initialise the sensor
+3. Initialise the server
+4. Turn on the LED
+5. Gather the data through the BME680 sensor
+6. Update the global values
+7. Display the values on the web page
+8. Turn the LED off
+9. Sleep
+
+
+The `setup()` function initialises the BME680, server with the STA connection, sampling for the sensor and pin for the LED.
+
+The `loop()` function handles the led on/off, BME680 readings and sending the sensor data back to the server. 
+
+The `processor()` function handles the update of the variables inside the `index_html` variable.
+
+The `notFound()` function simply sends a 404 response if the page is not found.
+
+## Usage
+
+To connect to the server, simply visit inside a web browser the IP of the ESP32 (displayed inside the serial console).
+
+## Environment variable handling
+
+https://stackoverflow.com/questions/62314497/access-of-outer-environment-variable-in-platformio
 
 ### Bonus: ESPHome for HomeAssistant
 
@@ -399,7 +418,6 @@ I used different online guides to get to the final results. You'll find some ref
 - The size of the space for the pins of the BME680 is quite large and the placeholder for the BME680 as well. I built it as such so that you can also use other kinds of sensors (I'm planning on adding a soil sensor and humidity sensor), leaving enough space for jumper cables to go out of the case.
 - Make it more portable by using a portable battery
 - I would have liked to add an OLED display but was limited by the number of power GPIOs (an extension board is needed)
-- A server can be added to display the results on a web page and additional notifications
 
 ## Guides 
 
