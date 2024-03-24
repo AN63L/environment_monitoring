@@ -142,6 +142,8 @@ I'm assuming you are familiar with the ESP32 micro-controller and now how to acc
 - Setup a new project using PlatformIO
 - Install the ESP32 Boardard Adafruit BME680 Library (The latest version I installed was 2.0.4)
 - Install the PMserial library by Alvaro Valdebenito (the latest version I installed was 1.2.0)
+- Install ESPAsyncWebServer-esphome library (the latest version I installed was 2.1.0)
+- Install the AsyncTCP-esphome library (the latest version I installed was 1.2.2)
 - Upload the code using platformIO. If your board is like mine, **press boot when the terminal shows "connecting...."**
 
 ## Software explanations
