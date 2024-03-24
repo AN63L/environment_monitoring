@@ -400,3 +400,13 @@ I used different online guides to get to the final results. You'll find some ref
 - Make it more portable by using a portable battery
 - I would have liked to add an OLED display but was limited by the number of power GPIOs (an extension board is needed)
 - A server can be added to display the results on a web page and additional notifications
+
+## Guides 
+
+- https://randomnerdtutorials.com/esp32-bme680-sensor-arduino/
+- https://github.com/avaldebe/PMserial
+- https://www.espruino.com/PMS7003
+- https://hpclab.blogspot.com/2020/02/esp8266-based-wifi-air-quality.html
+- https://learn.adafruit.com/pm25-air-quality-sensor?view=all
+- https://esphome.io/components/sensor/bme680
+- https://esphome.io/components/sensor/pmsx003
