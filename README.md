@@ -271,6 +271,7 @@ I used different online guides to get to the final results. You'll find some ref
 ## Future improvements
 
 - Add a placeholder for the ESP32, for the moment it has no holder. It's not moving much because of the length of the cables but it is not ideal. 
+- The size of the space for the pins of the BME680 is quite large and the placeholder for the BME680 as well. I built it as such so that you can also use other kinds of sensors (I'm planning on adding a soil sensor and humidity sensor), leaving enough space for jumper cables to go out of the case.
 - Make it more portable by using a portable battery
 - I would have liked to add an OLED display but was limited by the number of power GPIOs (an extension board is needed)
 - A server can be added to display the results on a web page and additional notifications
