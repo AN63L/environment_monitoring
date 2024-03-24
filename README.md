@@ -107,10 +107,15 @@ Optionally, you can use the SPI connection (however it won't work with home assi
 
 ![BME TO ESP32 I2C](./images/ESP32_BME680_Wiring_Diagram_SPI.png)
 
-3. Next we will connect the PMS7003. If you are lucky, you go one with an adaptor board to make the assembly. I originally didn't and had to solder the pins myself (bad idea). After buying an adapter, I followed the connections below. 
+3. Next we will connect the PMS7003. If you are lucky, you go one with an adaptor board to make the assembly. I originally didn't and had to solder the pins myself (bad idea). After buying an adapter, I followed the connections below. The connection are pretty self explanatory.
+
+RX -> TX
+TX -> RX
+VCC -> VIN
+GND -> GND
 
 
-4. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
+1. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
 
 ![Magnets placed inside case](./images/magnets.jpg)
 
@@ -120,7 +125,11 @@ Optionally, you can use the SPI connection (however it won't work with home assi
 ![BME680 glued sensor](./images/bme680_glued.jpg)
 
 6. Place the components inside
+
+![Components inside case](./images/components_inside_case.jpg)
+
 7. (optional) glue with hot glue the ESP32 in place (depending on the length of your jumper cables it might not be an issue but because there is no holder you'll have to open the lid every time you plug/unplug the ESP32)
+
 8. close the lid and you're ready to go !
 
 
@@ -227,8 +236,8 @@ Before the i2c variable:
 
 ```
 uart:
-  rx_pin: GPIO3
-  tx_pin: GPIO1
+  rx_pin: RX
+  tx_pin: TX
   baud_rate: 9600
 ```
 
@@ -250,7 +259,122 @@ sensor:
 The final result should look something like this: 
 
 ```
-XXX
+substitutions:
+  name: esphome-web-f34cc0
+  friendly_name: ESP32 Environment Sensors
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  project:
+    name: esphome.web
+    version: '1.0'
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+
+# Allow provisioning Wi-Fi via serial
+improv_serial:
+
+wifi:
+  # Set up a wifi access point
+  ap: {}
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://esphome/example-configs/esphome-web/esp32.yaml@main
+  import_full_config: true
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# To have a "next url" for improv serial
+web_server:
+
+uart:
+  rx_pin: RX
+  tx_pin: TX
+  baud_rate: 9600
+
+i2c:
+  # Example configuration entry
+sensor:
+  - platform: bme680
+    temperature:
+      name: "BME680 Temperature"
+      oversampling: 16x
+    pressure:
+      name: "BME680 Pressure"
+    humidity:
+      id: "humidity"
+      name: "BME680 Humidity"
+    gas_resistance:
+      id: "gas_resistance"
+      name: "BME680 Gas Resistance"
+    address: 0x77
+    update_interval: 30s
+  - platform: template
+    name: "BME680 Indoor Air Quality"
+    id: iaq
+    icon: "mdi:gauge"
+    # caulculation: comp_gas = log(R_gas[ohm]) + 0.04 log(Ohm)/%rh * hum[%rh]
+    lambda: |-
+      return log(id(gas_resistance).state) + 0.04 *  id(humidity).state;
+  - platform: pmsx003
+    type: PMSX003
+    pm_1_0:
+      name: "Particulate Matter <1.0µm Concentration"
+    pm_2_5:
+      name: "Particulate Matter <2.5µm Concentration"
+    pm_10_0:
+      name: "Particulate Matter <10.0µm Concentration"
+    update_interval: 120s
+text_sensor:
+  - platform: template
+    name: "BME680 IAQ Classification"
+    icon: "mdi:checkbox-marked-circle-outline"
+    lambda: |-
+      if (int(id(iaq).state) <= 50) {
+        return {"Excellent"};
+      }
+      else if (int(id(iaq).state) <= 100) {
+        return {"Good"};
+      }
+      else if (int(id(iaq).state) <= 150) {
+        return {"Lightly polluted"};
+      }
+      else if (int(id(iaq).state) <= 200) {
+        return {"Moderately polluted"};
+      }
+      else if (int(id(iaq).state) <= 250) {
+        return {"Heavily polluted"};
+      }
+      else if (int(id(iaq).state) <= 350) {
+        return {"Severely polluted"};
+      }
+      else if (int(id(iaq).state) <= 500) {
+        return {"Extremely polluted"};
+      }
+      else {
+        return {"unknown"};
+      }
 ```
 
 1. (optional) Add automations in home assistant to send notifications
@@ -271,6 +395,7 @@ I used different online guides to get to the final results. You'll find some ref
 ## Future improvements
 
 - Add a placeholder for the ESP32, for the moment it has no holder. It's not moving much because of the length of the cables but it is not ideal. 
+- I badly designed the holder for the PMS7003, assuming the breakout board would with inside but unfortunately the design needs to be improved to take account of the extra space needed.
 - The size of the space for the pins of the BME680 is quite large and the placeholder for the BME680 as well. I built it as such so that you can also use other kinds of sensors (I'm planning on adding a soil sensor and humidity sensor), leaving enough space for jumper cables to go out of the case.
 - Make it more portable by using a portable battery
 - I would have liked to add an OLED display but was limited by the number of power GPIOs (an extension board is needed)
