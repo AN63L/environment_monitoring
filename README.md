@@ -1,4 +1,4 @@
-# Environment monitoring system with notification system and simple web server
+# Environment monitoring system and simple web server
 Budget friendly and lower-power consumption environment monitoring system with ESP32 board, BME680 sensor and PM-G7.
 
 ![Case view](./images/case1.jpg)
@@ -12,11 +12,12 @@ This guide is part of a project I built to monitor the air quality, temperature,
 
 It's built using an ESP32 board for its low power consumption and small size. 
 
-I've paired this project with a notification system, you can configure different notifications based on my needs. It's placed in a room and notifies me when: 
+I've paired this project with a notification system (only for HA), you can configure different notifications based on my needs. It's placed in a room and notifies me when: 
 - The air quality has deteriorated and I need to open a window to refresh the air
 - The temperature is running high and I need to cool down with a fan
 - The temperature is running low and I need to turn up the heaters
 - The air quality is dangerous because of different levels of gas
+- The air quality based on the PMS sensor data
 
 I've also 3D printed a small case (PLA) to hold the pieces together.
 
