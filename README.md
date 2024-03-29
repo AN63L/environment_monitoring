@@ -6,6 +6,12 @@ Budget friendly and lower-power consumption environment monitoring system with E
 ![Case view](./images/case3.jpg)
 ![Case view](./images/case4.jpg)
 
+## **UPDATE - Added configuration for soil and rain sensors**
+
+I added another configuration for a [simple rain sensor](https://soldered.com/product/simple-rain-sensor/) and a [simple soil humidity sensor](https://soldered.com/product/simple-soil-humidity-sensor/).
+
+Because there are only 2 power pins (3V and 5V) on the ESP32 I use and didn't want to purchase an extension board, I simply created a second configuration for the sensors. If you purchase an extension board, you should be able to simply add the two new sensors to your existing configuration.
+
 ## Overview
 
 This guide is part of a project I built to monitor the air quality, temperature, humidity, pressure and gas in a closed room. 
@@ -31,7 +37,13 @@ Excluding time for build and development, the breakdown of the costs are as foll
 - EUR 20 for the soldering iron
 - EUR 0.69 for the 69 grams of PLA (approx)
 
-The total of this project comes down to round **EUR 80**
+**Update for the soil and rain sensors**
+
+For the second configuration:
+- EUR 6.95 for the simple soil humidity sensor
+- EUR 6.95 for the simple rain sensor
+
+The total of this project comes down to round **EUR 80** or about **EUR 40** if you follow the rain sensor and humidity sensor.
 
 I used platformIO to manage the ESP32, the main folder with the content is available in the folder "ESP32 ENVIRONMENT MONITORING SYSTEM"
 
@@ -47,14 +59,20 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 - A soldering iron and relevant materials
 - Superglue to glue the BME680 sensor to the case
 
+**Update soil and rain sensors**
+
+For the second configuration with the soil and rain sensors: 
+- [simple soil humidity sensor](https://soldered.com/product/simple-soil-humidity-sensor/)
+- [simple rain sensor](https://soldered.com/product/simple-rain-sensor/)
+
 
 ## 3D prints
 
 The parts were printed using a Creality CR-20 pro. 
 
 The pieces are as follows: 
-- Lid (v2)
-- Case (v3)
+- Lid (v3) 
+- Case (v2) (or case_soldered)
 
 The original version of the case had some issues: 
 - there was not enough space to attach the jumper cables to the BME680 sensor
@@ -71,6 +89,10 @@ There are three versions of the lid. For some reason, I could not print the firs
 The third version is cleaned up to fit my needs with enough air, with a better design, rounded corners and a thinner format.
 
 The print times totals to 8h and 34 minutes. 
+
+*If you are using the soldered adapter* I made improvements to the case, as the previous versions didn't leave enough space for the jumper cables (see image below). I took the opportunity to remove the space for the PMS7003 which wasn't fit for purpose (see comment above).
+
+![Soldered adapter issue](./images/soldered_adapter_issue.jpg)
 
 You'll have to flip the lid 180 degrees, with the holes facing outward. This will make it easier to remove the supports for the BME680 sensor holder rather than the holes. 
 
@@ -89,6 +111,12 @@ My slicer settings were as follows:
 - Initial layer speed: 20 mm/s
 - Support: everywhere at 80 degrees angle
 - **Remove overlapping volumes in Mesh fixes settings in order to print honeycomb holes on lid**
+
+**Update** 
+
+For the soil and humidity sensor, the slicer configuration is the same, however the pieces to print are: 
+- soil_rain_case
+- soil_rain_lid
 
 ## Assembly and wiring
 
@@ -109,10 +137,14 @@ Optionally, you can use the SPI connection (however it won't work with home assi
 
 3. Next we will connect the PMS7003. If you are lucky, you go one with an adaptor board to make the assembly. I originally didn't and had to solder the pins myself (bad idea). After buying an adapter, I followed the connections below. The connection are pretty self explanatory.
 
-RX -> TX
-TX -> RX
-VCC -> VIN
-GND -> GND
+For HA: <br />
+RX -> TX0 <br />
+TX -> RX0 <br />
+For the version of the software without HA:<br />
+RX -> TX2 <br />
+TX -> RX2 <br />
+VCC -> VIN <br />
+GND -> GND <br />
 
 
 1. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
@@ -132,6 +164,8 @@ GND -> GND
 
 8. close the lid and you're ready to go !
 
+**Update for soil and rain sensor** TODO
+
 ## Software setup
 
 I'm assuming you are familiar with the ESP32 micro-controller and now how to access and run it. There are loads of guides to get started, you can use these for reference: 
@@ -146,6 +180,12 @@ I'm assuming you are familiar with the ESP32 micro-controller and now how to acc
 - Install the AsyncTCP-esphome library (the latest version I installed was 1.2.2)
 - Upload the code using platformIO. If your board is like mine, **press boot when the terminal shows "connecting...."**
 
+*Notes*:
+- Don't forget to specify `build_flags = -D PMS_RX=16 -D PMS_TX=17` in platformio.ini or your execution will fail and you will get an error during BME680 initialisation (although these flags are required for the PMS7003)
+- Plugging the PMS7003 on the RX0 and TX0 pins results in errors entering the bootloader and makes updated impossible.
+
+**Update for soil and rain sensor** TODO
+
 ## Software explanations
 
 I've included comments inside the code for additional explanations. You can un-comment certain lines to enable console logging.
@@ -153,7 +193,7 @@ I've included comments inside the code for additional explanations. You can un-c
 The code does the following on a loop: 
 
 1. Initialise the pins
-2. Initialise the sensor
+2. Initialise the sensors (BME680 and PMS7003)
 3. Initialise the server
 4. Turn on the LED
 5. Gather the data through the BME680 sensor
@@ -171,6 +211,9 @@ The `processor()` function handles the update of the variables inside the `index
 
 The `notFound()` function simply sends a 404 response if the page is not found.
 
+
+**Update for soil and rain sensor** TODO
+
 ## Usage
 
 To connect to the server, simply visit inside a web browser the IP of the ESP32 (displayed inside the serial console).
@@ -179,7 +222,7 @@ To connect to the server, simply visit inside a web browser the IP of the ESP32 
 
 https://stackoverflow.com/questions/62314497/access-of-outer-environment-variable-in-platformio
 
-### Bonus: ESPHome for HomeAssistant
+### Bonus: ESPHome for HomeAssistant (only for the first configuration)
 
 Using ESPHome will not work in combination with the code provided. Any actions you take will remove any work done through platformIO.
 
@@ -430,3 +473,4 @@ I used different online guides to get to the final results. You'll find some ref
 - https://learn.adafruit.com/pm25-air-quality-sensor?view=all
 - https://esphome.io/components/sensor/bme680
 - https://esphome.io/components/sensor/pmsx003
+- https://stackoverflow.com/questions/62314497/access-of-outer-environment-variable-in-platformio

@@ -2,8 +2,8 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
-Adafruit_BME680 bme; // I2C
 #define SEALEVELPRESSURE_HPA (1013.25)
+Adafruit_BME680 bme; // I2C
 // For SPI
 // #define BME_SCK 18
 // #define BME_MISO 19
@@ -13,8 +13,7 @@ Adafruit_BME680 bme; // I2C
 
 // FOR PMS
 #include <PMserial.h>
-// SerialPM pms(PMSx003, PMS_RX, PMS_TX); // PMSx003, RX, TX
-SerialPM pms(PMSx003, 10, 11); // PMSx003, RX, TX
+SerialPM pms(PMSx003, PMS_RX, PMS_TX); // PMSx003, RX, TX
 
 // for onboard LED
 #define LED 2
@@ -24,7 +23,6 @@ SerialPM pms(PMSx003, 10, 11); // PMSx003, RX, TX
 #include "AsyncTCP.h"
 #include "ESPAsyncWebServer.h"
 
-// TODO: replace with your credentials
 // Creds for WiFi
 // https://stackoverflow.com/questions/62314497/access-of-outer-environment-variable-in-platformio
 #define XSTR(x) #x
@@ -43,6 +41,9 @@ float humidity;
 float gas_resistance;
 float altitude;
 char aqi;
+float pm_1;
+float pm_2;
+float pm_10;
 
 // 404 response
 void notFound(AsyncWebServerRequest *request)
@@ -73,6 +74,18 @@ String processor(const String &var)
   {
     return String(altitude);
   }
+  else if (var == "pm_1")
+  {
+    return String(pm_1);
+  }
+  else if (var == "pm_2")
+  {
+    return String(pm_2);
+  }
+  else if (var == "pm_10")
+  {
+    return String(pm_10);
+  }
   else
     return String("Error");
 }
@@ -84,6 +97,9 @@ const char index_html[] PROGMEM = R"rawliteral(<!DOCTYPE HTML><html><body>
 <h2>Humidity: <span id="hum">%humidity%</span>&percnt;</h2>
 <h2>Gas Resistance: <span id="gas">%gas_resistance%</span>&K&ohm;</h2>
 <h2>Altitude: <span id="alti">%altitude%</span>m</h2>
+<h2>PM 1.0: <span id="pm_1">%pm_1%</span>[ug/m3]</h2>
+<h2>PM 2.5: <span id="pm_2">%pm_2%</span>[ug/m3]</h2>
+<h2>PM 10: <span id="pm_10">%pm_10%</span>[ug/m3]</h2>
 </body>
 <script>
 if (!!window.EventSource) {
@@ -122,6 +138,21 @@ if (!!window.EventSource) {
   console.log("altitude", e.data);
   document.getElementById("alti").innerHTML = e.data;
  }, false);
+
+ source.addEventListener('pm_1', function(e) {
+  console.log("pm_1", e.data);
+  document.getElementById("pm_1").innerHTML = e.data;
+ }, false);
+
+ source.addEventListener('pm_2', function(e) {
+  console.log("pm_2", e.data);
+  document.getElementById("pm_2").innerHTML = e.data;
+ }, false);
+
+ source.addEventListener('pm_10', function(e) {
+  console.log("pm_10", e.data);
+  document.getElementById("pm_10").innerHTML = e.data;
+ }, false);
 }
 </script>
 
@@ -141,12 +172,6 @@ void setup()
     while (1)
       ;
   }
-  // if (!pms.init())
-  // {
-  //   Serial.println(F("Could not find a valid PMS sensor, check wiring!"));
-  //   while (1)
-  //     ;
-  // }
   pms.init();
 
   delay(1000);
@@ -210,8 +235,7 @@ void loop()
   Serial.println("LED is on");
   Serial.println();
 
-  Serial.print(F("Reading started at "));
-  Serial.print(millis());
+  Serial.print(F("BME 680 Reading started \n"));
 
   // Tell BME680 to begin measurement.
   unsigned long endTime = bme.beginReading();
@@ -227,8 +251,7 @@ void loop()
     Serial.println(F("Failed to complete reading :("));
     return;
   }
-  Serial.print(F("Reading completed at "));
-  Serial.println(millis());
+  Serial.print(F("Reading completed \n"));
 
   // Serial.print(F("Temperature = "));
   // Serial.print(bme.temperature);
@@ -260,21 +283,28 @@ void loop()
   altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
   events.send(String(gas_resistance).c_str(), "altitude", millis());
 
+  Serial.print(F("PMS7003 Reading started \n"));
   pms.read(); // read the PM sensor
-  Serial.print(F("PM1.0 "));
-  Serial.print(pms.pm01);
-  Serial.print(F(", "));
-  Serial.print(F("PM2.5 "));
-  Serial.print(pms.pm25);
-  Serial.print(F(", "));
-  Serial.print(F("PM10 "));
-  Serial.print(pms.pm10);
-  Serial.println(F(" [ug/m3]"));
-  delay(10000); // wait for 10 seconds
+  // Serial.print(F("PM1.0 "));
+  // Serial.print(pms.pm01);
+  pm_1 = pms.pm01;
+  events.send(String(pm_1).c_str(), "pm_1", millis());
+  // Serial.print(F("\n"));
+  // Serial.print(F("PM2.5 "));
+  // Serial.print(pms.pm25);
+  pm_2 = pms.pm25;
+  events.send(String(pm_2).c_str(), "pm_2", millis());
+  // Serial.print(F("\n"));
+  // Serial.print(F("PM10 "));
+  // Serial.print(pms.pm10);
+  pm_10 = pms.pm10;
+  events.send(String(pm_10).c_str(), "pm_10", millis());
+  // Serial.println(F(" [ug/m3]"));
+  Serial.print(F("PMS7003 Reading completed \n"));
 
   Serial.println();
 
   digitalWrite(LED, LOW);
   Serial.println("LED is off");
-  delay(2000);
+  delay(60000); // wait for 60 seconds
 }
