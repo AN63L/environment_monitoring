@@ -1,38 +1,36 @@
-// For sensors
+// For BME680
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
-
-#define LED 2
-
+Adafruit_BME680 bme; // I2C
+#define SEALEVELPRESSURE_HPA (1013.25)
 // For SPI
 // #define BME_SCK 18
 // #define BME_MISO 19
 // #define BME_MOSI 23
 // #define BME_CS 5
-
-#define SEALEVELPRESSURE_HPA (1013.25)
-
-Adafruit_BME680 bme; // I2C
-
-// For SPI
 // Adafruit_BME680 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK);
 
+// FOR PMS
 #include <PMserial.h>
-SerialPM pms(PMSx003, Serial); // PMSx003, UART
+// SerialPM pms(PMSx003, PMS_RX, PMS_TX); // PMSx003, RX, TX
+SerialPM pms(PMSx003, 10, 11); // PMSx003, RX, TX
 
-// For env variables
-#define XSTR(x) #x
-#define STR(x) XSTR(x)
+// for onboard LED
+#define LED 2
 
 // For server
 #include <WiFi.h>
 #include "AsyncTCP.h"
 #include "ESPAsyncWebServer.h"
 
+// TODO: replace with your credentials
 // Creds for WiFi
-const char *ssid = STR(SSID);
-const char *password = STR(PWD);
+// https://stackoverflow.com/questions/62314497/access-of-outer-environment-variable-in-platformio
+#define XSTR(x) #x
+#define STR(x) XSTR(x)
+const char *wifi_ssid = STR(WIFI_SSID);
+const char *wifi_pwd = STR(WIFI_PWD);
 
 // server setup
 AsyncWebServer server(80);
@@ -132,6 +130,7 @@ if (!!window.EventSource) {
 void setup()
 {
   Serial.begin(115200);
+  // Serial.begin(9600);
   while (!Serial)
     ;
   Serial.println(F("BME680 async test"));
@@ -142,11 +141,22 @@ void setup()
     while (1)
       ;
   }
+  // if (!pms.init())
+  // {
+  //   Serial.println(F("Could not find a valid PMS sensor, check wiring!"));
+  //   while (1)
+  //     ;
+  // }
+  pms.init();
 
   delay(1000);
   // Set the device as a Station and Soft Access Point simultaneously
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  Serial.println("wifi_ssid: ");
+  Serial.println(wifi_ssid);
+  Serial.println("wifi_pwd: ");
+  Serial.println(wifi_pwd);
+  WiFi.begin(wifi_ssid, wifi_pwd);
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(1000);
@@ -249,6 +259,18 @@ void loop()
   // Serial.println(F(" m"));
   altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
   events.send(String(gas_resistance).c_str(), "altitude", millis());
+
+  pms.read(); // read the PM sensor
+  Serial.print(F("PM1.0 "));
+  Serial.print(pms.pm01);
+  Serial.print(F(", "));
+  Serial.print(F("PM2.5 "));
+  Serial.print(pms.pm25);
+  Serial.print(F(", "));
+  Serial.print(F("PM10 "));
+  Serial.print(pms.pm10);
+  Serial.println(F(" [ug/m3]"));
+  delay(10000); // wait for 10 seconds
 
   Serial.println();
 
