@@ -48,9 +48,6 @@ I used platformIO to manage the ESP32, the main folder with the content is avail
 - A soldering iron and relevant materials
 - Superglue to glue the BME680 sensor to the case
 
-
-
-
 ## 3D prints
 
 The parts were printed using a Creality CR-20 pro. 
@@ -126,7 +123,7 @@ VCC -> VIN <br />
 GND -> GND <br />
 
 
-1. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
+4. Install the magnets in place. The holes might seem a little too tight but if you slowly push in the magnets they will fit perfectly into place (using a flat surface like a hammer helps). Make sure the polarity is correct (you want to close the lid on the case!)
 
 ![Magnets placed inside case](./images/magnets.jpg)
 
